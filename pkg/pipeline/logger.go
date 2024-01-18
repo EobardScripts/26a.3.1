@@ -42,12 +42,12 @@ func logIsExist() bool {
 func createDirAndFile() *os.File {
 	err := os.MkdirAll(filepath.Join(dirPath, dirName), 777)
 	if err != nil {
-		logf("Ошибка при создании папки для лога: %w", err)
+		logf("Ошибка при создании папки для лога: %s", err.Error())
 		return nil
 	}
 	file, err := os.OpenFile(filepath.Join(dirPath, dirName, fileName), os.O_CREATE|os.O_APPEND, os.ModePerm)
 	if err != nil {
-		logf("Ошибка при создании файла лога: %w", err)
+		logf("Ошибка при создании файла лога: %s", err.Error())
 		return nil
 	}
 
@@ -57,9 +57,9 @@ func createDirAndFile() *os.File {
 // Получаем файл для записи
 func getFileLog() *os.File {
 	if logIsExist() {
-		file, err := os.OpenFile(filepath.Join(dirPath, dirName, fileName), os.O_CREATE|os.O_APPEND, os.ModePerm)
+		file, err := os.OpenFile(filepath.Join(dirPath, dirName, fileName), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0755)
 		if err != nil {
-			logf("Ошибка при открытии файла лога: %w", err)
+			logf("Ошибка при открытии файла лога: %s", err.Error())
 			return nil
 		}
 
@@ -76,7 +76,7 @@ func writeToLog(log string) {
 	if file != nil {
 		_, err := file.WriteString(log)
 		if err != nil {
-			logf("Ошибка при записи в лог: %w", err)
+			logf("Ошибка при записи в лог: %s", err.Error())
 			return
 		}
 	}
